@@ -89,4 +89,21 @@ $('#userBox').on('click', '.delete', function() {
         });
     }
 
+});
+var selectAll = $("#selectAll");
+selectAll.on('change', function() {
+    // alert(1);
+    var status = $(this).prop('checked');
+    $("#userBox").find('input').prop("checked", status);
+});
+$("#userBox").on('change', '.userStatus', function() {
+    //判断如果其子类全部被选中，选中按钮也应该被选中
+    var inputs = $("#userBox").find('input');
+    // 全部 与选中相比较
+    if (inputs.length == inputs.filter(":checked").length) {
+        selectAll.prop('checked', true);
+    } else {
+        selectAll.prop('checked', false);
+    }
+
 })
