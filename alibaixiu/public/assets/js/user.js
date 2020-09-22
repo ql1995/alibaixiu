@@ -91,9 +91,15 @@ $('#userBox').on('click', '.delete', function() {
 
 });
 var selectAll = $("#selectAll");
+var deleteMany = $("#deleteMany");
 selectAll.on('change', function() {
     // alert(1);
     var status = $(this).prop('checked');
+    if (status) {
+        deleteMany.show();
+    } else {
+        deleteMany.hide();
+    }
     $("#userBox").find('input').prop("checked", status);
 });
 $("#userBox").on('change', '.userStatus', function() {
@@ -105,5 +111,29 @@ $("#userBox").on('change', '.userStatus', function() {
     } else {
         selectAll.prop('checked', false);
     }
+    if (inputs.filter(":checked").length > 0) {
+        deleteMany.show();
+    } else {
+        deleteMany.hide();
+    }
 
-})
+});
+// 批量删除
+deleteMany.on('click', function() {
+    var ids = [];
+    var inputs = $("#userBox").find('input').filter(":checked");
+    inputs.each(function(index, ele) {
+        // 将传统dom转换为jquery
+        var id = $(ele).attr('data-id');
+        ids.push(id);
+    });
+    if (confirm("您确定要批量删除吗？")) {
+        $.ajax({
+            type: 'delete',
+            url: '/users/' + ids.join('-'),
+            success: function() {
+                location.reload();
+            }
+        });
+    };
+});
